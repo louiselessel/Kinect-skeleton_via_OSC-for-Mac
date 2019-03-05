@@ -13,7 +13,7 @@ to true if using ni_mate
 
 ---------------------------
 The code works!
-I have been using the "live preview" lightning icon (upper right corner of interface) in my Brackets to run the code though
+I have been using the "live preview" lightning icon (upper right corner of interface) in my Brackets to run the code though. Make sure you are in the folder "Distance copy" in Brackets before hitting that icon.
 I am not sure what port it is supposed to be output on?
 
 To run:
