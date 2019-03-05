@@ -3,10 +3,13 @@ Mimi Yin NYU-ITP
 Drawing skeleton joints and bones.
 
 Modified by Louise Lessél, NYU-ITP
-To choose to use NI_mate or Kinectron
+to use OSC for p5.js from https://github.com/genekogan/p5js-osc.
+In order to choose to use either NI_mate or Kinectron
 
 To switch between NI_mate or Kinectron, 
-change the variable ni_mate to false if using Kinectron / to true if using NI_mate.
+change the variable "ni_mate"
+to false if using Kinectron
+to true if using ni_mate
 
 ---------------------------
 The code works!
