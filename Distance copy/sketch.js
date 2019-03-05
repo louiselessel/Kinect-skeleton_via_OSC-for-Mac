@@ -1,140 +1,53 @@
 /*
 Mimi Yin NYU-ITP
-Drawing skeleton joints and bones.
+Drawing skeleton joints and bones from Kinect.
 
 Modified by Louise Lessél, NYU-ITP
-to use OSC for p5.js from https://github.com/genekogan/p5js-osc.
+To use OSC for p5.js based on Gene Kogan's https://github.com/genekogan/p5js-osc.
 In order to choose to use either NI_mate or Kinectron
 
-To switch between NI_mate or Kinectron, 
-change the variable "ni_mate"
-to false if using Kinectron
-to true if using ni_mate
-
 ---------------------------
-The code works!
-I have been using the "live preview" lightning icon (upper right corner of interface) in my Brackets to run the code though. Make sure you are in the folder "Distance copy" in Brackets before hitting that icon.
-I am not sure what port it is supposed to be output on?
 
-To run:
+To switch between NI_mate (mac) or Kinectron (windows) skeleton, 
+change the variable "ni_mate"
+- to false if using Kinectron
+- to true if using ni_mate (plug the Kinect into your mac, and download free https://www.ni-mate.com/download/)
+Make sure ni_mate is sending skeleton data as "Basic", turn off "Hand".
+
+
+INSTRUCTIONS TO RUN:
+
 In terminal:
-cd to path of folder containing all sketches
-node bridge.js
+- cd to path of folder you downloaded from github
+- node bridge.js
 
 Go to in chrome:
-http://localhost:????      (I am not sure what port!)
-
-
+http://localhost:????      (I am not sure what port! SEE NOTE)
 
 ---------------------------
-Issue for Mimi: 
-I am not sure how to adapt code so both could call the same function for the visuals. Regardless of whether I am using NI_mate or Kinectron.
+NOTE: The code works! HOWEVER one small chink!
+For ni_mate use:
+I have been using the "live preview" lightning icon (upper right corner of interface) in Brackets code editor (http://brackets.io) to run the code through. Make sure you are in the folder "Example" in Brackets before hitting that icon -> To do this: Drag the folder into Brackets.
 
-The issue is, that I was unable to figure out adapting the scaling of the joints.
-Somehow the ni_mate values would not be treated the same (as the function scaleJoint(joint)), so I had to put them in an array.
+I am not sure what port it is supposed to be output on on the browser yet. I would assume it's the same as in class (Localhost:8000 ), but it don't work  :D
 
-Since the ni_mate joints are now arrays, and the kinectron is something else, you cannot just do this, which would be totally awesome:
-
-// ni_mate calling function with the _ni variables
-distanceCoolness(handRight_ni, handLeft_ni);
-// or
-// kinectron calling same function - but with the kinectron variables
-distanceCoolness(handRight, handLeft);
-
------------------------------
-
-Here are the two different implementations of the scaling function:
-
-// kinectron implementation
-function scaleJoint(joint) {
-  return {
-    x: (joint.cameraX * width / 2) + width / 2,
-    y: (-joint.cameraY * width / 2) + height / 2,
-  }
-}
-
-// ni_mate implementation
-function scaleJoint_ni_mate(_x,_y,_z) {
-    let pos = [0,0,0];
-    pos[0] = (_x * -width / 2) + width / 2;
-    pos[1] = (_y * -height / 2) + height;
-    pos[2] = (_z * 100)
-    return pos;  
-}
-
--------------------------------
-
-To illustrate, here are the two different distanceCoolness(_start, _end) functions
-
-// Kinectron implementation
-function distanceCoolness(_start, _end) {
-  // Pick 2 joints to connect
-  let start = _start;
-  let end = _end;
-
-  // Draw a line
-  stroke(255);
-  line(start.x, start.y, end.x, end.y);
-  let d = dist(start.x, start.y, end.x, end.y);
-
-  // Map the distance to angle speed
-  let aspeed = map(d, 0, width, 0, PI/2);
-  // Inverse, non-linear mapping
-  //let aspeed = 1/d;
-
-  a+=aspeed;
-
-  noStroke();
-	// Calculate circular pathway
-  let x = cos(a)*width/4 + width/2;
-  let y = sin(a)*width/4 + height/2;
-  ellipse(x, y, 5, 5);
-}
-
-
-// ni_mate implementation
-function distanceCoolness(_start, _end) {
-  // check that joints are not empty
-  if (_start != null && _end != null) {
-      // Pick 2 joints to connect
-      let start = _start;
-      let end = _end;
-
-      // Draw a line
-      stroke(255);
-      line(start[0], start[1], end[0], end[1]);
-      
-      let d = dist(start[0], start[1], end[0], end[1]);
-
-      // Map the distance to angle speed
-      let aspeed = map(d, 0, width*50, 0, PI/2);
-      // Inverse, non-linear mapping
-      //let aspeed = 1/d;
-
-      a+=aspeed;
-
-      noStroke();
-      // Calculate circular pathway
-      let x = cos(a)*width/4 + width/2;
-      let y = sin(a)*width/4 + height/2;
-      fill(255);
-      ellipse(x, y, 5, 5);
-  }
-}
+---------------------------
 */
 
+
+// ------------- Global variables  -------------
 
 // Variable for circle
 let a = 0;
 
-
 // Declare kinectron
 let kinectron = null;
 
-// Kinectron or NI_mate?    <--- Change to false if using Kinectron / to true if using NI_mate
+// Using Kinectron or NI_mate?    <--- Change to false if using Kinectron / to true if using NI_mate
 let ni_mate = true;
 
-// Kinectron ONLY variables  -------------
+
+// ------------- Kinectron ONLY variables  -------------
 // Mid-line
 let head = null;
 let neck = null;
@@ -171,13 +84,13 @@ let ankleLeft = null;
 let footLeft = null;
 
 
-// NI_mate ONLY variables --------------
+// ------------- NI_mate ONLY variables --------------
 // Mid-line
 let head_ni = null;
 let neck_ni = null;
-let chest_ni = null;
+let chest_ni = null;  //this never gets sent from ni_mate when in basic mode - don't use
 let torso_ni = null;
-let pelvis_ni = null;
+let pelvis_ni = null; //this never gets sent from ni_mate when in basic mode - don't use 
 
 // Right Arm
 let collarRight_ni = null;
@@ -210,8 +123,7 @@ let ankleLeft_ni = null;
 let footLeft_ni = null;
 
 
-
-
+// ------------ SETUP ------------------
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -219,33 +131,32 @@ function setup() {
   background(0);
 }
 
+// initialize variables and servers from either Kinect
 function init(){
-  // if Using Kinectron
-  if (ni_mate == false) {
-      // Define and create an instance of kinectron
-      kinectron = new Kinectron("10.18.68.35");  //  <---- Set IP here
-
-      // Connect with application over peer
-      kinectron.makeConnection();
-
-      // Request all tracked bodies and pass data to your callback
-      kinectron.startTrackedBodies(bodyTracked);
- }
-    
-  // if Using ni_mate
-  if (ni_mate == true) {
-      setupOsc(7000, 3334);     // <---- Set ports here (oscPortIn, oscPortOut)
-  }
+    // if Using Kinectron
+    if (ni_mate == false) {
+        // Define and create an instance of kinectron
+        kinectron = new Kinectron("10.18.68.35");         //  <---- Set IP here
+        // Connect with application over peer
+        kinectron.makeConnection();
+        // Request all tracked bodies and pass data to your callback
+        kinectron.startTrackedBodies(bodyTracked);
+     }
+    // if Using ni_mate
+    if (ni_mate == true) {
+        setupOsc(7000, 3334);                             // <---- Set ports here (oscPortIn, oscPortOut)
+    }
 }
 
 
+// ------------ DRAW ------------------
 
 function draw() {
   background(0);
   if (ni_mate) {
     fill(255);
     // draw entire skeleton
-    drawAllJoints_ni_mate();
+    drawAllJoints();
     // call your awesome function that draws visuals
     distanceCoolness(handRight_ni, handLeft_ni);
   }
@@ -259,203 +170,20 @@ function draw() {
 
 
 
-// ------------ STUFF FOR USING NI_MATE via OSC ------------------
+// ------------ Do awesome visuals ------------------
 
-function setupOsc(oscPortIn, oscPortOut) {
-	var socket = io.connect('http://127.0.0.1:8081', { port: 8081, rememberTransport: false });
-	socket.on('connect', function() {
-		socket.emit('config', {	
-			server: { port: oscPortIn,  host: '127.0.0.1'},
-			client: { port: oscPortOut, host: '127.0.0.1'}
-		});
-	});
-	socket.on('message', function(msg) {
-		if (msg[0] == '#bundle') {
-			for (var i=2; i<msg.length; i++) {
-				receiveOsc(msg[i][0], msg[i].splice(1));
-			}
-		} else {
-			receiveOsc(msg[0], msg.splice(1));
-		}
-	});
-}
-
-function receiveOsc(address, value) {
-    // only care about OSC if using ni_mate, so if ni_mate == true
-    if (ni_mate) {
-        //console.log("received OSC: " + address + ", " + value);
-        
-        // Set values of everything
-        // Mid-line
-        if (address == 'Head') {
-            head_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        if (address == 'Neck') {
-            neck_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        if (address == 'Chest') {
-            chest_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        if (address == 'Torso') {
-            torso_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        if (address == 'Pelvis') {
-            pelvis_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-
-        
-        // Left Arm
-        if (address == 'Left_Collar') {
-            collarLeft_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        if (address == 'Left_Shoulder') {
-            shoulderLeft_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        if (address == 'Left_Elbow') {
-            wristLeft_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        if (address == 'Left_Wrist') {
-            elbowLeft_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        if (address == 'Left_Hand') {
-            handLeft_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        if (address == 'Left_Hand_Tip') {
-            handTipLeft_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        if (address == 'Left_Thumb') {
-            thumbLeft_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        
-        // Right Arm
-        if (address == 'Right_Collar') {
-            collarRight_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        if (address == 'Right_Shoulder') {
-            shoulderRight_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        if (address == 'Right_Elbow') {
-            elbowRight_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        if (address == 'Right_Wrist') {
-            wristRight_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        if (address == 'Right_Hand') {
-            handRight_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        if (address == 'Right_Hand_Tip') {
-            handTipRight_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        if (address == 'Right_Thumb') {
-            thumbRight_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        
-
-        // Left Leg
-        if (address == 'Left_Hip') {
-            hipLeft_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        if (address == 'Left_Knee') {
-            kneeLeft_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        if (address == 'Left_Ankle') {
-            ankleLeft_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        if (address == 'Left_Foot') {
-            footLeft_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        
-        // Right Leg
-        if (address == 'Right_Hip') {
-            hipRight_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        if (address == 'Right_Knee') {
-            kneeRight_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        if (address == 'Right_Ankle') {
-            ankleRight_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        if (address == 'Right_Foot') {
-            footRight_ni = scaleJoint_ni_mate(value[0],value[1],value[2]);
-        }
-        
-    }
-}
-
-// Scale the joint position data to fit the screen
-function scaleJoint_ni_mate(_x,_y,_z) {
-    let pos = [0,0,0];
-    pos[0] = (_x * -width / 2) + width / 2;
-    pos[1] = (_y * -height / 2) + height;
-    pos[2] = (_z * 100)
-    return pos;  
-}
-
-// Draw skeleton / all joints
-function drawAllJoints_ni_mate() {
-  // Mid-line
-    drawJoint_ni_mate(head_ni);
-    drawJoint_ni_mate(neck_ni);
-    drawJoint_ni_mate(chest_ni);
-    drawJoint_ni_mate(torso_ni);
-    drawJoint_ni_mate(pelvis_ni);
-    
-    // Left Arm
-    drawJoint_ni_mate(collarLeft_ni);
-    drawJoint_ni_mate(shoulderLeft_ni);
-    drawJoint_ni_mate(elbowLeft_ni);
-    drawJoint_ni_mate(wristLeft_ni);
-    drawJoint_ni_mate(handLeft_ni);
-    drawJoint_ni_mate(handTipLeft_ni);
-    drawJoint_ni_mate(thumbLeft_ni);
-    
-    // Right Arm
-    drawJoint_ni_mate(collarRight_ni);
-    drawJoint_ni_mate(shoulderRight_ni);
-    drawJoint_ni_mate(elbowRight_ni);
-    drawJoint_ni_mate(wristRight_ni);
-    drawJoint_ni_mate(handRight_ni);
-    drawJoint_ni_mate(handTipRight_ni);
-    drawJoint_ni_mate(thumbRight_ni);
-    
-    // Left Leg
-    drawJoint_ni_mate(hipLeft_ni);
-    drawJoint_ni_mate(kneeLeft_ni);
-    drawJoint_ni_mate(ankleLeft_ni);
-    drawJoint_ni_mate(footLeft_ni);
-    
-    // Right Leg
-    drawJoint_ni_mate(hipRight_ni);
-    drawJoint_ni_mate(kneeRight_ni);
-    drawJoint_ni_mate(ankleRight_ni);
-    drawJoint_ni_mate(footRight_ni);
-}
-
-// Draw joint
-function drawJoint_ni_mate(_joint) {
-  //console.log(_joint);
-
- if (_joint != null) {
-  stroke(255);
-  strokeWeight(5);
-  point(_joint[0], _joint[1]);
-  //fill(255);
-  //ellipse(_joint[0], _joint[1], 100, 100);
- }
-}
-
-function distanceCoolness(_start, _end) {
-  // check that joints are not empty
-  if (_start != null && _end != null) {
-      // Pick 2 joints to connect
+// Pick 2 joints to connect
+function distanceCoolness(_start, _end) { 
+    // check joint is not empty!
+    if (_start != null && _end != null) {
       let start = _start;
       let end = _end;
 
       // Draw a line
       stroke(255);
-      line(start[0], start[1], end[0], end[1]);
-      
-      let d = dist(start[0], start[1], end[0], end[1]);
+      line(start.x, start.y, end.x, end.y);
+        
+      let d = dist(start.x, start.y, end.x, end.y);
 
       // Map the distance to angle speed
       let aspeed = map(d, 0, width*50, 0, PI/2);
@@ -468,19 +196,90 @@ function distanceCoolness(_start, _end) {
       // Calculate circular pathway
       let x = cos(a)*width/4 + width/2;
       let y = sin(a)*width/4 + height/2;
-      fill(255);
       ellipse(x, y, 5, 5);
-  }
-}
-
-function sendOsc(address, value) {
-	socket.emit('message', [address].concat(value));
+    }
 }
 
 
+// ------------ Do stuff to the skeleton ------------------
 
 
-// ------------ STUFF FOR USING KINECTRON // FROM MIMI'S CODE ------------------
+// Scale the joint position data to fit the screen
+// 1. Move it to the center of the screen
+// 2. Flip the y-value upside down
+// 3. Return it as an object literal
+function scaleJoint(joint) {
+    // scaling for using ni_mate
+    if (ni_mate){
+        return {
+            x: (joint.cameraX * -width / 2) + width / 2,
+            y: (joint.cameraY * -height / 2) + height,
+            z: joint.cameraZ * 100
+        }
+    }
+    // scaling for using kinectron
+    else {
+        return {
+            x: (joint.cameraX * width / 2) + width / 2,
+            y: (-joint.cameraY * width / 2) + height / 2,
+            z: joint.cameraZ
+        }
+    }
+}
+
+// Draw a joint
+function drawJoint(joint) {
+    // check joint is not empty
+    if (joint != null) {
+      stroke(255);
+      strokeWeight(5);
+      point(joint.x, joint.y);
+    }
+}
+
+// Draw skeleton / all joints
+function drawAllJoints() {
+  // Mid-line
+    drawJoint(head_ni);
+    drawJoint(neck_ni);
+    drawJoint(chest_ni);
+    drawJoint(torso_ni);
+    drawJoint(pelvis_ni);
+    
+    // Left Arm
+    drawJoint(collarLeft_ni);
+    drawJoint(shoulderLeft_ni);
+    drawJoint(elbowLeft_ni);
+    drawJoint(wristLeft_ni);
+    drawJoint(handLeft_ni);
+    drawJoint(handTipLeft_ni);
+    drawJoint(thumbLeft_ni);
+    
+    // Right Arm
+    drawJoint(collarRight_ni);
+    drawJoint(shoulderRight_ni);
+    drawJoint(elbowRight_ni);
+    drawJoint(wristRight_ni);
+    drawJoint(handRight_ni);
+    drawJoint(handTipRight_ni);
+    drawJoint(thumbRight_ni);
+    
+    // Left Leg
+    drawJoint(hipLeft_ni);
+    drawJoint(kneeLeft_ni);
+    drawJoint(ankleLeft_ni);
+    drawJoint(footLeft_ni);
+    
+    // Right Leg
+    drawJoint(hipRight_ni);
+    drawJoint(kneeRight_ni);
+    drawJoint(ankleRight_ni);
+    drawJoint(footRight_ni);
+}
+
+
+
+// ------------ Getting Skeleton from KINECTRON ------------------
 
 // use input from Kinectron
 function bodyTracked(body) {
@@ -488,7 +287,6 @@ function bodyTracked(body) {
   //kinectron.getJoints(drawJoint);
 
   // Get all the joints off the tracked body and do something with them
-
   // Mid-line
    head = scaleJoint(body.joints[kinectron.HEAD]);
    neck = scaleJoint(body.joints[kinectron.NECK]);
@@ -523,59 +321,274 @@ function bodyTracked(body) {
    kneeLeft = scaleJoint(body.joints[kinectron.KNEELEFT]);
    ankleLeft = scaleJoint(body.joints[kinectron.ANKLELEFT]);
    footLeft = scaleJoint(body.joints[kinectron.FOOTLEFT]);
-
-  // call function to do stuff here?
-  // distanceCoolness(handRight, handLeft);
 }
 
 
 
-// Scale the joint position data to fit the screen
-// 1. Move it to the center of the screen
-// 2. Flip the y-value upside down
-// 3. Return it as an object literal
-function scaleJoint(joint) {
-  return {
-    x: (joint.cameraX * width / 2) + width / 2,
-    y: (-joint.cameraY * width / 2) + height / 2,
-  }
+// ------------ Getting Skeleton from NI_MATE via OSC ------------------
+
+// Setup OSC
+function setupOsc(oscPortIn, oscPortOut) {
+	var socket = io.connect('http://127.0.0.1:8081', { port: 8081, rememberTransport: false });
+	socket.on('connect', function() {
+		socket.emit('config', {	
+			server: { port: oscPortIn,  host: '127.0.0.1'},
+			client: { port: oscPortOut, host: '127.0.0.1'}
+		});
+	});
+	socket.on('message', function(msg) {
+		if (msg[0] == '#bundle') {
+			for (var i=2; i<msg.length; i++) {
+				receiveOsc(msg[i][0], msg[i].splice(1));
+			}
+		} else {
+			receiveOsc(msg[0], msg.splice(1));
+		}
+	});
 }
 
-// Draw skeleton
-function drawJoint(joint) {
+// use input from NI_mate
+function receiveOsc(address, value) {
+    // only care about OSC if using ni_mate, so if ni_mate == true
+    if (ni_mate) {
+        //console.log("received OSC: " + address + ", " + value);
+        
+        // Set values of everything
+        // Mid-line
+        if (address == 'Head') {
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            head_ni = scaleJoint(joint);
+        }
+        if (address == 'Neck') {
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            neck_ni = scaleJoint(joint);
+        }
+        
+        if (address == 'Chest') { // this never gets sent from ni_mate when in basic mode - don't use
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            chest_ni = scaleJoint(joint);
+        }
+    
+        if (address == 'Torso') {
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            torso_ni = scaleJoint(joint);
+            //console.log("received OSC: " + address + ", " + value);
+        }
+        
+        if (address == 'Pelvis') { // this never gets sent from ni_mate when in basic mode - don't use
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            pelvis_ni = scaleJoint(joint);
+            
+        }
 
-  //console.log("JOINT OBJECT", joint);
-  let pos = scaleJoint(joint);
+        // Left Arm
+        if (address == 'Left_Collar') {
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            collarLeft_ni = scaleJoint(joint);
+        }
+        if (address == 'Left_Shoulder') {
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            shoulderLeft_ni = scaleJoint(joint);
+        }
+        if (address == 'Left_Elbow') {
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            elbowLeft_ni = scaleJoint(joint);
+        }
+        if (address == 'Left_Wrist') {
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            wristLeft_ni = scaleJoint(joint);
+        }
+        if (address == 'Left_Hand') {
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            handLeft_ni = scaleJoint(joint);
+        }
+        if (address == 'Left_Hand_Tip') {
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            handTipLeft_ni = scaleJoint(joint);
+        }
+        if (address == 'Left_Thumb') {
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            thumbLeft_ni = scaleJoint(joint);
+        }
+        
+        
+        // Right Arm
+        if (address == 'Right_Collar') {
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            collarRight_ni = scaleJoint(joint);
+        }
+        if (address == 'Right_Shoulder') {
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            shoulderRight_ni = scaleJoint(joint);
+        }
+        if (address == 'Right_Elbow') {
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            elbowRight_ni = scaleJoint(joint);
+        }
+        if (address == 'Right_Wrist') {
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            wristRight_ni = scaleJoint(joint);
+        }
+        if (address == 'Right_Hand') {
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            handRight_ni = scaleJoint(joint);
+        }
+        if (address == 'Right_Hand_Tip') {
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            handTipRight_ni = scaleJoint(joint);
+        }
+        if (address == 'Right_Thumb') {
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            thumbRight_ni = scaleJoint(joint);
+        }
+        
 
-  //Kinect location data needs to be normalized to canvas size
-  stroke(255);
-  strokeWeight(5);
-  point(pos.x, pos.y);
+        // Left Leg
+        if (address == 'Left_Hip') {
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            hipLeft_ni = scaleJoint(joint);
+        }
+        if (address == 'Left_Knee') {
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            kneeLeft_ni = scaleJoint(joint);
+        }
+        if (address == 'Left_Ankle') {
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            ankleLeft_ni = scaleJoint(joint);
+        }
+        if (address == 'Left_Foot') {
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            footLeft_ni = scaleJoint(joint);
+        }
+        
+        // Right Leg
+        if (address == 'Right_Hip') {
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            hipRight_ni = scaleJoint(joint);
+        }
+        if (address == 'Right_Knee') {
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            kneeRight_ni = scaleJoint(joint);
+        }
+        if (address == 'Right_Ankle') {
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            ankleRight_ni = scaleJoint(joint);
+        }
+        if (address == 'Right_Foot') {
+            let joint = {
+              cameraX : value[0],
+              cameraY : value[1],
+              cameraZ : value[2]
+            }
+            footRight_ni = scaleJoint(joint);
+        }
+    }
 }
 
-/* 
-// Version for Kinectron      < -------- not sure how to adapt so both could call same function
-function distanceCoolness(_start, _end) {
-  // Pick 2 joints to connect
-  let start = _start;
-  let end = _end;
-
-  // Draw a line
-  stroke(255);
-  line(start.x, start.y, end.x, end.y);
-  let d = dist(start.x, start.y, end.x, end.y);
-
-  // Map the distance to angle speed
-  let aspeed = map(d, 0, width, 0, PI/2);
-  // Inverse, non-linear mapping
-  //let aspeed = 1/d;
-
-  a+=aspeed;
-
-  noStroke();
-	// Calculate circular pathway
-  let x = cos(a)*width/4 + width/2;
-  let y = sin(a)*width/4 + height/2;
-  ellipse(x, y, 5, 5);
+function sendOsc(address, value) {
+	socket.emit('message', [address].concat(value));
 }
-*/
