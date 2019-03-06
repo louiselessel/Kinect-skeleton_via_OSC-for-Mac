@@ -34,7 +34,7 @@ let a = 0;
 let kinectron = null;
 
 // Using Kinectron or NI_mate?    <--- Change to false if using Kinectron / to true if using NI_mate
-let ni_mate = true;
+let ni_mate = false;
 
 
 // ------------- Kinectron ONLY variables  -------------
@@ -118,7 +118,7 @@ let footLeft_ni = null;
 function setup() {
   createCanvas(windowWidth, windowHeight);
   init();
-  console.log(windowWidth);
+  //console.log(windowWidth);
   background(0);
 }
 
@@ -127,7 +127,7 @@ function init(){
     // if Using Kinectron
     if (ni_mate == false) {
         // Define and create an instance of kinectron
-        kinectron = new Kinectron("10.18.68.35");         //  <---- Set IP here
+        kinectron = new Kinectron("10.17.201.104");         //  <---- Set IP here
         // Connect with application over peer
         kinectron.makeConnection();
         // Request all tracked bodies and pass data to your callback
@@ -144,15 +144,19 @@ function init(){
 
 function draw() {
   background(0);
+    
+  // draw entire skeleton
+  drawAllJoints();
+    
+  // using Ni Mate (use the "handRight_ni" variables)
   if (ni_mate) {
     fill(255);
-    // draw entire skeleton
-    drawAllJoints();
     // call your awesome function that draws visuals
     distanceCoolness(handRight_ni, handLeft_ni);
   }
-    
-  if (ni_mate == false) {
+
+  // using Kinectron (use the "handRight" variables)
+  else {
     // call your awesome function that draws visuals
     distanceCoolness(handRight, handLeft);
   }
@@ -199,34 +203,28 @@ function distanceCoolness(_start, _end) {
 // 1. Move it to the center of the screen
 // 2. Flip the y-value upside down
 // 3. Return it as an object literal
-function scaleJoint(_joint) {
+function scaleJoint(joint) {
     // scaling for using ni_mate
+    if (joint != null) {
+        if (ni_mate == true){
+            return {
+                x: (joint.cameraX * width / 2) + width / 2,
+                y: (-joint.cameraY * height / 2) + height / 2,
+                z: joint.cameraZ * 100
+            }
+        }
 
-    if (ni_mate == true){
-        return {
-            x: (_joint.cameraX * width / 2) + width / 2,
-            y: (_joint.cameraY * -height / 2) + height / 2,
-            z: _joint.cameraZ * 100
+        // scaling for using kinectron
+        else {
+            fill(255);
+            ellipse(100,100,50,50);
+            return {
+                x: (joint.cameraX * width / 2) + width / 2,
+                y: (-joint.cameraY * width / 2) + height / 2,
+                //z: joint.cameraZ
+            }
         }
     }
-    
-    // scaling for using kinectron
-    if (ni_mate == false) {
-        return {
-            x: (joint.cameraX * width / 2) + width / 2,
-            y: (-joint.cameraY * width / 2) + height / 2,
-            z: joint.cameraZ
-        }
-    }
-    // for code safety (always have a return), not sure I need it?
-    else {
-        return {
-            x: joint.cameraX,
-            y: joint.cameraY,
-            z: joint.cameraZ
-        }
-    }
-    
 }
 
 // Draw a joint
@@ -241,42 +239,81 @@ function drawJoint(joint) {
 
 // Draw skeleton / all joints
 function drawAllJoints() {
-  // Mid-line
-    drawJoint(head_ni);
-    drawJoint(neck_ni);
-    drawJoint(chest_ni);
-    drawJoint(torso_ni);
-    drawJoint(pelvis_ni);
+    if (ni_mate) {
+        // Mid-line
+        drawJoint(head_ni);
+        drawJoint(neck_ni);
+        drawJoint(chest_ni);
+        drawJoint(torso_ni);
+        drawJoint(pelvis_ni);
+
+        // Left Arm
+        drawJoint(collarLeft_ni);
+        drawJoint(shoulderLeft_ni);
+        drawJoint(elbowLeft_ni);
+        drawJoint(wristLeft_ni);
+        drawJoint(handLeft_ni);
+        drawJoint(handTipLeft_ni);
+        drawJoint(thumbLeft_ni);
+
+        // Right Arm
+        drawJoint(collarRight_ni);
+        drawJoint(shoulderRight_ni);
+        drawJoint(elbowRight_ni);
+        drawJoint(wristRight_ni);
+        drawJoint(handRight_ni);
+        drawJoint(handTipRight_ni);
+        drawJoint(thumbRight_ni);
+
+        // Left Leg
+        drawJoint(hipLeft_ni);
+        drawJoint(kneeLeft_ni);
+        drawJoint(ankleLeft_ni);
+        drawJoint(footLeft_ni);
+
+        // Right Leg
+        drawJoint(hipRight_ni);
+        drawJoint(kneeRight_ni);
+        drawJoint(ankleRight_ni);
+        drawJoint(footRight_ni);
+    }
     
-    // Left Arm
-    drawJoint(collarLeft_ni);
-    drawJoint(shoulderLeft_ni);
-    drawJoint(elbowLeft_ni);
-    drawJoint(wristLeft_ni);
-    drawJoint(handLeft_ni);
-    drawJoint(handTipLeft_ni);
-    drawJoint(thumbLeft_ni);
-    
-    // Right Arm
-    drawJoint(collarRight_ni);
-    drawJoint(shoulderRight_ni);
-    drawJoint(elbowRight_ni);
-    drawJoint(wristRight_ni);
-    drawJoint(handRight_ni);
-    drawJoint(handTipRight_ni);
-    drawJoint(thumbRight_ni);
-    
-    // Left Leg
-    drawJoint(hipLeft_ni);
-    drawJoint(kneeLeft_ni);
-    drawJoint(ankleLeft_ni);
-    drawJoint(footLeft_ni);
-    
-    // Right Leg
-    drawJoint(hipRight_ni);
-    drawJoint(kneeRight_ni);
-    drawJoint(ankleRight_ni);
-    drawJoint(footRight_ni);
+    else {
+        // Mid-line
+        drawJoint(head);
+        drawJoint(neck);
+        drawJoint(spineShoulder);
+        drawJoint(spineMid);
+        drawJoint(spineBase);
+
+         // Left Arm
+        drawJoint(shoulderLeft);
+        drawJoint(elbowLeft);
+        drawJoint(wristLeft);
+        drawJoint(handLeft);
+        drawJoint(handTipLeft);
+        drawJoint(thumbLeft);
+
+        // Right Arm
+        drawJoint(shoulderRight);
+        drawJoint(elbowRight);
+        drawJoint(wristRight);
+        drawJoint(handRight);
+        drawJoint(handTipRight);
+        drawJoint(thumbRight);
+
+        // Left Leg
+        drawJoint(hipLeft);
+        drawJoint(kneeLeft);
+        drawJoint(ankleLeft);
+        drawJoint(footLeft);
+
+        // Right Leg
+        drawJoint(hipRight);
+        drawJoint(kneeRight);
+        drawJoint(ankleRight);
+        drawJoint(footRight);
+    }
 }
 
 
@@ -286,7 +323,7 @@ function drawAllJoints() {
 // use input from Kinectron
 function bodyTracked(body) {
   // Draw all the joints
-  //kinectron.getJoints(drawJoint);
+  // kinectron.getJoints(drawJoint);
 
   // Get all the joints off the tracked body and do something with them
   // Mid-line
@@ -323,7 +360,10 @@ function bodyTracked(body) {
    kneeLeft = scaleJoint(body.joints[kinectron.KNEELEFT]);
    ankleLeft = scaleJoint(body.joints[kinectron.ANKLELEFT]);
    footLeft = scaleJoint(body.joints[kinectron.FOOTLEFT]);
+    
+   //console.Log("head" + head);
 }
+
 
 
 
