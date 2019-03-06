@@ -154,7 +154,7 @@ function draw() {
     
   if (ni_mate == false) {
     // call your awesome function that draws visuals
-    //distanceCoolness(handRight, handLeft);
+    distanceCoolness(handRight, handLeft);
   }
 }
 
