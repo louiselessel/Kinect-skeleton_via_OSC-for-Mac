@@ -22,10 +22,6 @@ In terminal:
 - node bridge.js
 
 Drag the index.html file into browser window (e.g Google Chrome)
-
-NOTE: The code works! HOWEVER one small chink for ni_mate.
-For some reason it disregards the scaling, when drag'n'dropping the index.html file.
-Instead: To see the output, I have been using the "live preview" lightning icon (upper right corner of interface) in Brackets code editor (http://brackets.io) to run the code through. Make sure you are in the folder "Example" and have marked index.html in Brackets before hitting that icon. To do that: Drag the folder "Example" into Brackets, double-click "index.html".
 */
 
 
