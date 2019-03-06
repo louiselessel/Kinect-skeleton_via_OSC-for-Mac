@@ -21,17 +21,11 @@ In terminal:
 - cd to path of folder you downloaded from github
 - node bridge.js
 
-Go to in chrome:
-http://localhost:????      (I am not sure what port! SEE NOTE)
+Drag the index.html file into browser window (e.g Google Chrome)
 
----------------------------
-NOTE: The code works! HOWEVER one small chink!
-For ni_mate use:
-I have been using the "live preview" lightning icon (upper right corner of interface) in Brackets code editor (http://brackets.io) to run the code through. Make sure you are in the folder "Example" in Brackets before hitting that icon -> To do this: Drag the folder into Brackets.
-
-I am not sure what port it is supposed to be output on on the browser yet. I would assume it's the same as in class (Localhost:8000 ), but it don't work  :D
-
----------------------------
+NOTE: The code works! HOWEVER one small chink for ni_mate.
+For some reason it disregards the scaling, when drag'n'dropping the index.html file.
+Instead: To see the output, I have been using the "live preview" lightning icon (upper right corner of interface) in Brackets code editor (http://brackets.io) to run the code through. Make sure you are in the folder "Example" and have marked index.html in Brackets before hitting that icon. To do that: Drag the folder "Example" into Brackets, double-click "index.html".
 */
 
 
@@ -128,6 +122,7 @@ let footLeft_ni = null;
 function setup() {
   createCanvas(windowWidth, windowHeight);
   init();
+  console.log(windowWidth);
   background(0);
 }
 
@@ -163,7 +158,7 @@ function draw() {
     
   if (ni_mate == false) {
     // call your awesome function that draws visuals
-    distanceCoolness(handRight, handLeft);
+    //distanceCoolness(handRight, handLeft);
   }
 }
 
@@ -208,23 +203,34 @@ function distanceCoolness(_start, _end) {
 // 1. Move it to the center of the screen
 // 2. Flip the y-value upside down
 // 3. Return it as an object literal
-function scaleJoint(joint) {
+function scaleJoint(_joint) {
     // scaling for using ni_mate
-    if (ni_mate){
+
+    if (ni_mate == true){
         return {
-            x: (joint.cameraX * -width / 2) + width / 2,
-            y: (joint.cameraY * -height / 2) + height,
-            z: joint.cameraZ * 100
+            x: (_joint.cameraX * width / 2) + width / 2,
+            y: (_joint.cameraY * -height / 2) + height / 2,
+            z: _joint.cameraZ * 100
         }
     }
+    
     // scaling for using kinectron
-    else {
+    if (ni_mate == false) {
         return {
             x: (joint.cameraX * width / 2) + width / 2,
             y: (-joint.cameraY * width / 2) + height / 2,
             z: joint.cameraZ
         }
     }
+    // for code safety (always have a return), not sure I need it?
+    else {
+        return {
+            x: joint.cameraX,
+            y: joint.cameraY,
+            z: joint.cameraZ
+        }
+    }
+    
 }
 
 // Draw a joint
@@ -351,7 +357,7 @@ function setupOsc(oscPortIn, oscPortOut) {
 function receiveOsc(address, value) {
     // only care about OSC if using ni_mate, so if ni_mate == true
     if (ni_mate) {
-        //console.log("received OSC: " + address + ", " + value);
+        console.log("received OSC: " + address + ", " + value);
         
         // Set values of everything
         // Mid-line
