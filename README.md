@@ -22,14 +22,10 @@ In terminal:
 - cd to path of folder you downloaded from github
 - node bridge.js
 
-Go to in chrome:
-http://localhost:????      (I am not sure what port! SEE NOTE)
+Drag the index.html file into browser window (e.g Google Chrome)
 
----------------------------
-NOTE: The code works! HOWEVER one small chink!
-For ni_mate use:
-I have been using the "live preview" lightning icon (upper right corner of interface) in Brackets code editor (http://brackets.io) to run the code through. Make sure you are in the folder "Example" in Brackets before hitting that icon -> To do this: Drag the folder into Brackets.
-
-I am not sure what port it is supposed to be output on on the browser yet. I would assume it's the same as in class (Localhost:8000 ), but it don't work  :D
+NOTE: The code works! HOWEVER one small chink for ni_mate.
+For some reason it disregards the scaling, when drag'n'dropping the index.html file.
+Instead: To see the output, I have been using the "live preview" lightning icon (upper right corner of interface) in Brackets code editor (http://brackets.io) to run the code through. Make sure you are in the folder "Example" and have marked index.html in Brackets before hitting that icon. To do that: Drag the folder "Example" into Brackets, double-click "index.html".
 
 ---------------------------
