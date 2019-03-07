@@ -393,7 +393,7 @@ function setupOsc(oscPortIn, oscPortOut) {
 function receiveOsc(address, value) {
     // only care about OSC if using ni_mate, so if ni_mate == true
     if (ni_mate) {
-        console.log("received OSC: " + address + ", " + value);
+        //console.log("received OSC: " + address + ", " + value);
         
         // Set values of everything
         // Mid-line
