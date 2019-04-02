@@ -22,7 +22,7 @@ This implementation uses Node.js in p5 to recieve OSC. So start by setting that 
 1) install [node](https://nodejs.org/)
 
 2) In terminal:
-- cd to path of folder you downloaded from github
+- cd to path of folder you downloaded from github 
 - npm install
 
 Dependencies:
