@@ -50,7 +50,7 @@ Drag the index.html file into a browser window (e.g Google Chrome)
 
 #### INSTRUCTIONS TO RUN Using Kinectron
 
-Make sure a computer on the same local network is running Kinectron.
+Make sure a Windows computer on the same local network is running [Kinectron](https://kinectron.github.io.).
 
 Change to the correct IP adress in sketch.js on this line: kinectron = new Kinectron("xx.xx.xx.xx")
 
