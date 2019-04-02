@@ -46,13 +46,17 @@ In terminal:
 
 Drag the index.html file into a browser window (e.g Google Chrome)
 
+Remember to close connection again when you are done: CTRL + C
+
 ---------------------------
 
 #### INSTRUCTIONS TO RUN Using Kinectron
 
 Make sure a Windows computer on the same local network is running [Kinectron](https://kinectron.github.io.).
 
-Change to the correct IP adress in sketch.js on this line: kinectron = new Kinectron("xx.xx.xx.xx")
+Open the file sketch.js on a windows or Mac computer.
+Change the current IP address in sketch.js on this line: kinectron = new Kinectron("xx.xx.xx.xx")
+to the IP of the computer running Kinectron.
 
 In Terminal:
 - cd to path of folder you downloaded from github
@@ -60,6 +64,8 @@ In Terminal:
 
 Open browser window (e.g Google Chrome)
 - Go to Localhost:8000 
+
+Remember to close connection again when you are done: CTRL + C
 
 ---------------------------
 

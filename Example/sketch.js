@@ -34,7 +34,7 @@ let a = 0;
 let kinectron = null;
 
 // Using Kinectron or NI_mate?    <--- Change to false if using Kinectron / to true if using NI_mate
-let ni_mate = false;
+let ni_mate = true;
 
 
 // ------------- Kinectron ONLY variables  -------------
