@@ -7,7 +7,7 @@ Made for the class Choreographic Interventions, ITP Spring 2019
 Modified by Louise Lessél, NYU-ITP
 You can use either NI Mate (Kinect for Mac) or Kinectron (Kinect for Windows).
 
-There is also a [Processing version of this code using NI Mate](https://github.com/mimiyin/choreographic-interventions-s19/wiki/Delicode-NI-Mate).
+There is also a [Processing version of this code using just NI Mate](https://github.com/mimiyin/choreographic-interventions-s19/wiki/Delicode-NI-Mate).
 
 ---------------------------
 
