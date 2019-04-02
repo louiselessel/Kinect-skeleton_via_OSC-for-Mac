@@ -1,8 +1,8 @@
 # Kinect skeleton via NI_Mate or Kinectron in p5.js, using OSC
 
 Mimi Yin NYU-ITP
-Drawing skeleton joints and bones from Kinect.
-Made for the class Choreographic Interventions, ITP Spring 2019
+Drawing skeleton joints and bones from Kinect v2 (Kinect for Xbox One).
+Made for the class [Choreographic Interventions](https://github.com/mimiyin/choreographic-interventions-s19/), ITP, NYU, Spring 2019
 
 Modified by Louise Lessél, NYU-ITP
 You can use either NI Mate (Kinect for Mac) or Kinectron (Kinect for Windows).
@@ -16,23 +16,23 @@ Read more about it in Applications.md file.
 
 ---------------------------
 
-This implementation uses Node.js in p5 to recieve OSC. So start by setting that up.
+## Dependencies:
+### Kinect for Mac
+To plug the Kinect2 (Kinect for Xbox One) directly into your mac, and get skeleton data via OSC, download the free NI Mate here: https://www.ni-mate.com/download/
 
+Then set up OSC using Node.js in p5.
 
 #### setup OSC
 
-1) install [node](https://nodejs.org/) (if you want to run on a Mac https://nodejs.org/en/.)
+1) install [node](https://nodejs.org/)
 
 2) In terminal:
 - cd to path of folder you downloaded from github 
 - npm install
 
-#### Dependencies:
-To plug the Kinect2 (Kinect for Xbox One) into your mac, and get skeleton data via OSC, download the free NI Mate here: https://www.ni-mate.com/download/
+### Kinect for Windows
+To use a windows computer as a server for Kinect have a look at how to set up Kinectron: https://kinectron.github.io. Kinectron allows you to see the output from the Kinect on any computer using the code in my repo.
 
-To use a windows computer as a server for Kinect (and see the output on any computer using this code), have a look at Kinectron: https://kinectron.github.io
-
-Make sure you have node.js installed on your computer to run on a Mac https://nodejs.org/en/.
 
 ---------------------------
 
