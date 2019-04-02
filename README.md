@@ -1,11 +1,11 @@
-# CI_W5
+# Kinect skeleton via NI_Mate or Kinectron in p5.js, using OSC
 
 Mimi Yin NYU-ITP
 Drawing skeleton joints and bones from Kinect.
+Made for the class Choreographic Interventions, ITP Spring 2019
 
 Modified by Louise Lessél, NYU-ITP
-In order to choose to use either NI Mate (Kinect for Mac) or Kinectron (Kinect for Windows).
-Made for the class Choreographic Interventions, ITP Spring 2019
+You can use either NI Mate (Kinect for Mac) or Kinectron (Kinect for Windows).
 
 ---------------------------
 
