@@ -9,6 +9,22 @@ For the class Choreographic Interventions, ITP Spring 2019
 
 ---------------------------
 
+OSC implementation based on OSC for p5.js by Gene Kogan https://github.com/genekogan/p5js-osc.
+Read more about it in Applications.md file.
+
+---------------------------
+
+This implementation uses Node.js in p5 to recieve OSC. So start by setting that up.
+
+
+#### setup
+
+1) install [node](https://nodejs.org/)
+
+2) In terminal:
+- cd to path of folder you downloaded from github
+- npm install
+
 Dependencies:
 To plug the Kinect2 (Kinect for Xbox One) into your mac, and get skeleton data via OSC, download the free NI Mate here: https://www.ni-mate.com/download/
 
@@ -59,7 +75,3 @@ Enjoy make more visuals!
 Try modifying the function distanceCoolness(_start, _end) {}
 
 ---------------------------
-
-OSC implementation based on OSC for p5.js by Gene Kogan https://github.com/genekogan/p5js-osc.
-
-I nmp installed all dependencies from p5js-osc for you already.
