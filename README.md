@@ -68,7 +68,7 @@ Change the variable "ni_mate" which you find in the file sketch.js
 - change to true if using NI Mate
 
 All code will work for both frameworks (but one at a time). 
-Enjoy make more visuals!
+Enjoy making more visuals!
 
 Try modifying the function distanceCoolness(_start, _end) {}
 
